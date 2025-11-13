@@ -28,6 +28,13 @@ generacion(homininae,ponginae, subfamily).
 generacion(hominini,gorillini, tribe).
 generacion(homo,pan,gorilla,pongo,hylobates, genus).
 
+generacion(homo, genus).
+generacion(pan, genus).
+generacion(gorilla, genus).
+generacion(pongo, genus).
+generacion(hylobates, genus).
+
+
 %1
 descendiente(X, Y) :- familia(Y, X).  % Caso directo: Y es padre de X
 descendiente(X, Y) :-  familia(Z, X),  descendiente(Z, Y).  % Y es ancestro de Z
@@ -64,6 +71,13 @@ superfamilia(X, S) :-
 
 %7
 
+generos_misma_subfamilia(Pan, G) :-
+    descendiente(Pan, Subf),
+    descendiente(G, Subf),
+    Subf = homininae,  % subfamilia de Pan
+    generacion(G, genus),
+    G \= Pan.
+
 %8
 ancestro_comun_mas_cercano(X, Y, A) :-
     descendiente(X, A),
@@ -84,7 +98,7 @@ generos_hermanos_taxonomicos(X, Ys) :-
     setof(Y, (familia(Subf, Y), Y \= X), Ys).
 
 %12
-misma_familia(X, Y) :-
+misma_familia2(X, Y) :-
     descendiente(X, F),
     descendiente(Y, F),
     generacion(F, family).
@@ -108,46 +122,58 @@ ruta_hasta_superfamilia(X, Ruta) :-
 
 %PREGUNTAS
 
-%1- Es el gorila descendiente de hominini?
+%1- Es el gorila descendiente de hominini? false
 %descendiente(gorilla,hominini).
 
-%2- ¿Es el Homo hermano del gorila?
+%2- ¿Es el Homo hermano del gorila? false
 %hermano(homo, gorilla).
 
-%3- ¿Son el Homo y el Gorilla de la misma subfamilia?
+%3- ¿Son el Homo y el Gorilla de la misma subfamilia? true
 %misma_subfamilia(homo, gorilla).
 
-%4- ¿Tiene Hominini la misma familia que Pongo?
+%4- ¿Tiene Hominini la misma familia que Pongo? true
 %misma_familia(hominini, pongo).
 
-%5- ¿Quiénes son los descendientes directos de una tribu?
+%5- ¿Quiénes son los descendientes directos de una tribu? homo, pan
 %descendientes_directos_tribu(hominini, D).
 
-%6- ¿Cuál es la superfamilia a la que pertenece Hylobates?
+%6- ¿Cuál es la superfamilia a la que pertenece Hylobates? hominoidea
 %superfamilia(hylobates, S).
 
-%7- ¿Qué géneros comparten la misma subfamilia con Pan?
+%7- ¿Qué géneros comparten la misma subfamilia con Pan? gorilla, homo
+%generos_misma_subfamilia(pan, G).
 
-%8- ¿Cuál es el ancestro común más cercano entre Homo y Gorilla?
+%8- ¿Cuál es el ancestro común más cercano entre Homo y Gorilla? homininae
 %ancestro_comun_mas_cercano(homo, gorilla, A).
 
-%9- ¿Es el orangután un homínido?
+%9- ¿Es el orangután un homínido? true
 % es_hominido(orangutan).
 
-%10- ¿Cuáles son todas las especies que pertenecen a la familia Hominidae?
+%10- ¿Cuáles son todas las especies que pertenecen a la familia Hominidae? bonobo, chimpanzee, gorilla, gorilla2, gorillini, homininae, hominini, homo, human.
 %especies_familia(hominidea, Especies).
 
-%11- ¿Qué géneros son hermanos taxonómicos de Homo?
+%11- ¿Qué géneros son hermanos taxonómicos de Homo? pan
 %generos_hermanos_taxonomicos(homo, Ys).
 
-%12 -¿Comparten Homo y Hylobates la misma familia?
-%misma_familia(homo, hylobates).
+%12 -¿Comparten Homo y Hylobates la misma familia? false
+%misma_familia2(homo, hylobates).
 
-%13- ¿Cuáles son los descendientes directos de la subfamilia Homininae?
+%13- ¿Cuáles son los descendientes directos de la subfamilia Homininae? hominini, gorillini
 %descendientes_directos_subfamilia(homininae, D).
 
-%14- ¿Qué géneros están bajo la familia Hominidae?
+%14- ¿Qué géneros están bajo la familia Hominidae? 
+%Gs = [gorilla, homo, pan, pongo] ;
+%Gs = [gorilla2] ;
+%Gs = [gorilla] ;
+%Gs = [homininae, ponginae] ;
+%Gs = [gorillini, hominini] ;
+%Gs = [homo, pan] ;
+%Gs = [human] ;
+%Gs = [bonobo, chimpanzee] ;
+%Gs = [pongo] ;
+%Gs = [orangutan].
+
 %generos_bajo_familia(hominidea, Gs).
 
-%15- ¿Cuál es la ruta taxonómica completa desde Homo hasta la superfamilia?
+%15- ¿Cuál es la ruta taxonómica completa desde Homo hasta la superfamilia? [hominini, homininae, hominidea, hominoidea].
 %ruta_hasta_superfamilia(homo, Ruta).
